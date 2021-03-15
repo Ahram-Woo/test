@@ -6,6 +6,11 @@ metadata:
     app: echo-version
 spec:
   replicas: 10
+    strategy: 
+        type: RollingUpdate
+        rollingUpdate:
+            *maxSurge: 1
+            *maxUnavailable: 0
   selector:
     matchLabels:
       app: echo-version
