@@ -3,7 +3,7 @@ apiVersion: apps/v1
 metadata:
   name: hello-world-app
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: hello-world-app
