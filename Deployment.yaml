@@ -1,28 +1,21 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: rollout-rollingupdate
+  name: echo-version
+  labels:
+    app: echo-version
 spec:
-  replicas: 5
-  revisionHistoryLimit: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: rollout-rollingupdate
+      app: echo-version
   template:
     metadata:
       labels:
-        app: rollout-rollingupdate
+        app: echo-version
     spec:
       containers:
-      - name: rollouts-demo
-        image: argoproj/rollouts-demo:blue
-        imagePullPolicy: Always
+      - name: echo-version
+        image: gihyodocker/echo-version:0.1.0
         ports:
         - containerPort: 8080
-  strategy:
-    # For a normal rolling update, simply specify the canary strategy without steps defined.
-    # The maxSurge and maxUnavailable fields can be specified. If omitted, defaults to 25% and 0
-    # respectively.
-    canary:
-      maxSurge: 1
-      maxUnavailable: 1
