@@ -1,29 +1,28 @@
+apiVersion: apps/v1beta1
 kind: Deployment
-apiVersion: apps/v1
 metadata:
-  name: hello-world-app
+name: rolling-update-test
 spec:
-  replicas: 4
-  selector:
-    matchLabels:
-      app: hello-world-app
-  template:
-    metadata:
-      labels:
-        app: hello-world-app
-    spec:
-      containers:
-      - name: hello-world-app
-        image: python:2.7
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/bash"]
-        args: ["-c", "echo \"<p>Hello from $(hostname)</p>\" > index.html; sleep 30000 && python -m SimpleHTTPServer 8080"]
-        ports:
-        - name: http
-          containerPort: 8080
-        readinessProbe: # 이 부분부터 추가하면 된다.
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
+replicas: 5
+minReadySeconds: 10
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 2
+    maxUnavailable: 0
+template:
+  metadata:
+    labels:
+      app: web-front-end
+      department: group3
+  spec:
+    containers:
+    - name: m-client-web
+      image: skarl/client:latest
+      env:
+      - name: PORT_ARGS
+        value: "--port=80"
+      ports:
+      - containerPort: 80
+        name: web-port
+        protocol: TCP
